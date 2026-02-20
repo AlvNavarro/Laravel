@@ -17,7 +17,7 @@ Se ha incluido un Seeder para facilitar la corrección. Ejecutar: `php artisan d
 | Usuario | Email | Password | Rol |
 | :--- | :--- | :--- | :--- |
 | **Administrador** | admin@crm.com | admin123 | Acceso Total |
-| **Usuario** | user@crm.com | user123 | Crear y Editar |
+| **Usuario** | usuario@crm.com | user123 | Crear y Editar |
 
 ## ⚙️ Instalación Adicional
 Tras clonar o actualizar esta rama, es necesario ejecutar:

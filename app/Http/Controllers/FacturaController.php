@@ -19,9 +19,20 @@ public function store(Request $request) {
         'numero_factura' => 'required|unique:facturas',
         'cliente_id' => 'required|exists:clientes,id',
         'fecha' => 'required|date',
-        'total' => 'required|numeric'
+        'total' => 'required|numeric',
+        'pdf' => 'nullable|mimes:pdf|max:2048' 
     ]);
-    \App\Models\Factura::create($request->all());
-    return redirect()->route('facturas.index')->with('success', 'Factura generada');
+
+    $datos = $request->all();
+
+    if ($request->hasFile('pdf')) {
+
+        $rutaPdf = $request->file('pdf')->store('facturas', 'public');
+        $datos['pdf'] = $rutaPdf;
+    }
+
+    \App\Models\Factura::create($datos);
+
+    return redirect()->route('facturas.index')->with('success', 'Factura generada correctamente');
 }
 }

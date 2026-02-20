@@ -5,5 +5,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Empleado extends Model {
     use HasFactory;
-    protected $fillable = ['nombre', 'puesto', 'email', 'telefono'];
+    protected $fillable = ['nombre', 'puesto', 'fecha_ingreso', 'salario'];
 }

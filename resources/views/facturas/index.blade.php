@@ -17,6 +17,7 @@
                         <th>Cliente</th>
                         <th>Fecha</th>
                         <th>Total</th>
+                        <th>Documento</th> {{-- Nueva columna --}}
                     </tr>
                 </thead>
                 <tbody>
@@ -26,6 +27,18 @@
                             <td>{{ $factura->cliente->nombre }}</td>
                             <td>{{ $factura->fecha }}</td>
                             <td>{{ number_format($factura->total, 2) }}€</td>
+                            <td>
+                                {{-- Si existe la ruta del pdf en la base de datos --}}
+                                @if($factura->pdf)
+                                    <a href="{{ asset('storage/' . $factura->pdf) }}" 
+                                       target="_blank" 
+                                       class="btn btn-danger btn-sm">
+                                        <i class="fas fa-file-pdf"></i> Ver PDF
+                                    </a>
+                                @else
+                                    <span class="badge badge-secondary">Sin PDF</span>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
