@@ -7,31 +7,35 @@ use Illuminate\Http\Request;
 
 class ClienteController extends Controller
 {
-    public function index() {
+    // Muestra la lista de clientes (Paso 11 de tu guía)
+    public function index()
+    {
         $clientes = Cliente::all();
         return view('clientes.index', compact('clientes'));
     }
 
-    public function create() {
+    // Muestra el formulario para crear un cliente
+    public function create()
+    {
         return view('clientes.create');
     }
 
-    public function store(Request $request) {
+    // --- ESTO ES EL PASO 3: GUARDAR EN BASE DE DATOS ---
+    public function store(Request $request)
+    {
+        // 1. Validamos los datos según los requisitos del proyecto [cite: 7]
+        $request->validate([
+            'nombre'    => 'required|string|max:255',
+            'email'     => 'required|email|unique:clientes',
+            'telefono'  => 'required|string',
+            'direccion' => 'required|string',
+        ]);
+
+        // 2. Creamos el registro en MySQL [cite: 16]
         Cliente::create($request->all());
-        return redirect()->route('clientes.index')->with('info', 'Cliente creado con éxito');
-    }
 
-    public function edit(Cliente $cliente) {
-        return view('clientes.edit', compact('cliente'));
-    }
-
-    public function update(Request $request, Cliente $cliente) {
-        $cliente->update($request->all());
-        return redirect()->route('clientes.index')->with('info', 'Cliente actualizado');
-    }
-
-    public function destroy(Cliente $cliente) {
-        $cliente->delete();
-        return redirect()->route('clientes.index')->with('info', 'Cliente eliminado');
+        // 3. Redireccionamos con un mensaje de éxito
+        return redirect()->route('clientes.index')
+                         ->with('success', 'Cliente creado correctamente.');
     }
 }

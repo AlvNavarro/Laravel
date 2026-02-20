@@ -6,17 +6,16 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
-    {
-        Schema::create('facturas', function (Blueprint $table) {
-            $table->id();
-            $table->string('numero');
-            $table->decimal('total', 10, 2);
-            $table->date('fecha');
-            $table->foreignId('cliente_id')->constrained()->onDelete('cascade');
-            $table->timestamps();
-        });
-    }
+public function up() {
+    Schema::create('facturas', function (Blueprint $table) {
+        $table->id();
+        $table->string('numero_factura');
+        $table->foreignId('cliente_id')->constrained('clientes')->onDelete('cascade');
+        $table->date('fecha');
+        $table->decimal('total', 10, 2);
+        $table->timestamps();
+    });
+}
 
     public function down()
     {

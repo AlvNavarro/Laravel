@@ -1,44 +1,56 @@
 @extends('adminlte::page')
-@section('title', 'Lista de Clientes')
-@section('content_header') 
-    <div class="d-flex justify-content-between">
-        <h1>Listado de Clientes</h1>
-        <a href="{{ route('clientes.create') }}" class="btn btn-primary">Nuevo Cliente</a>
-    </div>
+
+@section('title', 'Listado de Clientes')
+
+@section('content_header')
+    <h1>Gestión de Clientes</h1>
 @stop
 
 @section('content')
-    @if(session('info'))
-        <div class="alert alert-success">{{ session('info') }}</div>
-    @endif
-
-    <div class="card shadow">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Listado de clientes registrados</h3>
+            <div class="card-tools">
+                <a href="{{ route('clientes.create') }}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Nuevo Cliente
+                </a>
+            </div>
+        </div>
         <div class="card-body">
-            <table class="table table-hover">
-                <thead class="bg-navy">
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            @endif
+
+            <table class="table table-bordered table-striped datatable">
+                <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Nombre</th>
                         <th>Email</th>
                         <th>Teléfono</th>
                         <th>Dirección</th>
-                        <th width="150px">Acciones</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($clientes as $cliente)
                         <tr>
+                            <td>{{ $cliente->id }}</td>
                             <td>{{ $cliente->nombre }}</td>
                             <td>{{ $cliente->email }}</td>
                             <td>{{ $cliente->telefono }}</td>
                             <td>{{ $cliente->direccion }}</td>
                             <td>
-                                <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn btn-warning btn-sm shadow-sm"><i class="fas fa-edit"></i></a>
-                                
+                                <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn btn-info btn-sm">Editar</a>
                                 <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST" style="display:inline;">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm shadow-sm" onclick="return confirm('¿Borrar cliente?')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro?')">Eliminar</button>
                                 </form>
                             </td>
                         </tr>
@@ -47,4 +59,16 @@
             </table>
         </div>
     </div>
+@stop
+
+@section('css')
+    <link rel="stylesheet" href="/css/admin_custom.css">
+@stop
+
+@section('js')
+    <script>
+        $(document).ready(function() {
+            $('.datatable').DataTable();
+        });
+    </script>
 @stop
