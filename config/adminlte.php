@@ -119,7 +119,7 @@ return [
 'menu' => [
     ['header' => 'MÓDULOS DEL CRM'],
     [
-        'text' => 'Clientes (Obligatorio)',
+        'text' => 'Clientes',
         'url'  => 'clientes',
         'icon' => 'fas fa-fw fa-users',
     ],
