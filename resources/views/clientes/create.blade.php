@@ -1,29 +1,21 @@
 @extends('adminlte::page')
 
-@section('title', 'Crear Cliente')
+@section('title', 'Nuevo Cliente')
 
 @section('content_header')
-    <h1>Registrar Nuevo Cliente</h1>
+    <h1>Crear Nuevo Cliente</h1>
 @stop
 
 @section('content')
-    <div class="card">
+    <div class="card card-primary">
         <div class="card-header">
-            <h3 class="card-title">Formulario de Registro</h3>
+            <h3 class="card-title">Formulario de registro</h3>
         </div>
-        <div class="card-body">
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
 
-            <form action="{{ route('clientes.store') }}" method="POST">
-                @csrf
+        {{-- IMPORTANTE: enctype="multipart/form-data" es obligatorio para subir archivos --}}
+        <form action="{{ route('clientes.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="card-body">
                 <div class="form-group">
                     <label for="nombre">Nombre Completo</label>
                     <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Ej: Juan Pérez" value="{{ old('nombre') }}" required>
@@ -36,19 +28,52 @@
 
                 <div class="form-group">
                     <label for="telefono">Teléfono</label>
-                    <input type="text" name="telefono" class="form-control" id="telefono" placeholder="600 000 000" value="{{ old('telefono') }}" required>
+                    <input type="text" name="telefono" class="form-control" id="telefono" value="{{ old('telefono') }}" required>
                 </div>
 
                 <div class="form-group">
                     <label for="direccion">Dirección</label>
-                    <input type="text" name="direccion" class="form-control" id="direccion" placeholder="Calle Ejemplo, 123" value="{{ old('direccion') }}" required>
+                    <input type="text" name="direccion" class="form-control" id="direccion" value="{{ old('direccion') }}" required>
                 </div>
 
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-success">Guardar Cliente</button>
-                    <a href="{{ route('clientes.index') }}" class="btn btn-secondary">Cancelar</a>
+                {{-- REQUISITO: Subida de imágenes --}}
+                <div class="form-group">
+                    <label for="foto">Foto del Cliente (Imagen)</label>
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input type="file" name="foto" class="custom-file-input" id="foto" accept="image/*">
+                            <label class="custom-file-label" for="foto">Seleccionar imagen</label>
+                        </div>
+                    </div>
+                    <small class="text-muted">Formatos: jpg, png, jpeg. Máx: 2MB</small>
                 </div>
-            </form>
-        </div>
+
+                {{-- REQUISITO: Gestión de archivos (PDF) --}}
+                <div class="form-group">
+                    <label for="documento_pdf">Documento Adjunto (PDF)</label>
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input type="file" name="documento_pdf" class="custom-file-input" id="documento_pdf" accept="application/pdf">
+                            <label class="custom-file-label" for="documento_pdf">Seleccionar PDF</label>
+                        </div>
+                    </div>
+                    <small class="text-muted">Solo archivos PDF. Máx: 5MB</small>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <button type="submit" class="btn btn-primary">Guardar Cliente</button>
+                <a href="{{ route('clientes.index') }}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
     </div>
+@stop
+
+@section('js')
+    {{-- Este script es para que el nombre del archivo aparezca en el input de AdminLTE al seleccionarlo --}}
+    <script>
+        $(document).ready(function () {
+            bsCustomFileInput.init();
+        });
+    </script>
 @stop

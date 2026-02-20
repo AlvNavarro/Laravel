@@ -30,10 +30,10 @@
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Foto</th> {{-- Nueva Columna --}}
                         <th>Nombre</th>
                         <th>Email</th>
                         <th>Teléfono</th>
-                        <th>Dirección</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -41,34 +41,50 @@
                     @foreach($clientes as $cliente)
                         <tr>
                             <td>{{ $cliente->id }}</td>
+                            <td>
+                                @if($cliente->foto)
+                                    <img src="{{ asset('storage/' . $cliente->foto) }}" alt="Foto" style="width: 50px; height: 50px;" class="img-circle">
+                                @else
+                                    <img src="{{ asset('vendor/adminlte/dist/img/user2-160x160.jpg') }}" alt="Sin Foto" style="width: 50px; height: 50px;" class="img-circle">
+                                @endif
+                            </td>
                             <td>{{ $cliente->nombre }}</td>
                             <td>{{ $cliente->email }}</td>
                             <td>{{ $cliente->telefono }}</td>
-                            <td>{{ $cliente->direccion }}</td>
                             <td>
                                 <a href="{{ route('clientes.edit', $cliente->id) }}" class="btn btn-info btn-sm">Editar</a>
-                                <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro?')">Eliminar</button>
-                                </form>
+                                
+                                {{-- Control de Permisos: Solo Admin puede borrar --}}
+                                @if(auth()->user()->role == 'admin')
+                                    <form action="{{ route('clientes.destroy', $cliente->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro?')">Eliminar</button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
+
+            {{-- Requisito: Paginación --}}
+            <div class="mt-3">
+                {{ $clientes->links() }}
+            </div>
         </div>
     </div>
-@stop
-
-@section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
 @stop
 
 @section('js')
     <script>
         $(document).ready(function() {
-            $('.datatable').DataTable();
+            $('.datatable').DataTable({
+                "paging": false, // Desactivamos la paginación de JS para usar la de Laravel
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
+                }
+            });
         });
     </script>
 @stop
